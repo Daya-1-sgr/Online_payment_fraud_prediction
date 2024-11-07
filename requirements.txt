@@ -2,7 +2,6 @@ pandas
 numpy
 matplotlib
 seaborn
-kaggle
-kagglehub
 scikit-learn
+dill
 #-e .
