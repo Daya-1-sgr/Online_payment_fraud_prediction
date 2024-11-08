@@ -76,7 +76,7 @@ class Data_Transformation:
             test_arr=np.c_[input_feature_test_arr,np.array(target_feature_test_df)]
             logging.info('columntransformer complete')
 
-            logging.info('saving preprocessing object')
+            logging.info('saving preprocessing object and feature processor object')
             save_object(file_path=self.data_transformation_config.preprocessor_obj_file_path,obj=preprocessor_obj)
             save_object(file_path=self.data_transformation_config.featureprocessor_obj_file_path,obj=featurePipeline_obj)
 
