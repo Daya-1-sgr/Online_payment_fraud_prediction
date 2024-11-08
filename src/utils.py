@@ -22,31 +22,17 @@ def evaluate_models(x_train,y_train,x_test,y_test,models):
         report=[]
         for model_name,model in models.items():
             model.fit(x_train,y_train)
-            y_train_pred=model.predict(x_train)
             y_test_pred=model.predict(x_test)
-            print('xtrain shape',x_train.shape)
-            print('ytrain shape',y_train.shape)
-            print('y test pred:', y_test_pred.shape)
-            print(y_test.shape)
+
             tn, fp, fn, tp = confusion_matrix(y_test, y_test_pred).ravel()
             precision = precision_score(y_test, y_test_pred)
             recall = recall_score(y_test, y_test_pred)
             f1 = f1_score(y_test, y_test_pred)
             mcc = matthews_corrcoef(y_test, y_test_pred)
-            logging.info('saving for model:',model_name)
             print('saving metrics for the model:',model_name)
-            report.append({
-                'Model': model_name,
-                'TP': tp,
-                'TN': tn,
-                'FP': fp,
-                'FN': fn,
-                'Precision': precision,
-                'Recall': recall,
-                'F1 Score': f1,
-                'MCC': mcc
-            })
-        report_df=pd.DataFrame(report)    
+            report.append([model_name,tp,tn,fp,fn,precision,recall,f1,mcc])
+            print('saved model:',model_name)
+        report_df=pd.DataFrame(report,columns=['model','TP','TN','FP','FN','Precision','Recall','F1 Score','MCC'])    
         return report_df
 
     except Exception as e:

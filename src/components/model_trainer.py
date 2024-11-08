@@ -34,20 +34,21 @@ class Modeltrainer:
                 test_arr[:,:-1],test_arr[:,-1]
             )
             models={
-                'LogisticRegression':LogisticRegression(),
-                'KNeighborsClassifier':KNeighborsClassifier(),
-                'SVC':SVC(),
+                
+                'LogisticRegression':LogisticRegression(class_weight='balanced',max_iter=1000),
+                'LGBMClassifier':lgb.LGBMClassifier(class_weight='balanced'),
+                'XGBClassifier':xgb.XGBClassifier(scale_pos_weight=0.001),
+                
+                'CatBoostClassifier':CatBoostClassifier(class_weights=[1854,1774935]),
+                'SVC':SVC(class_weight='balanced'),
                 'DecisionTreeClassifier':DecisionTreeClassifier(),
-                'RandomForestClassifier':RandomForestClassifier(),
+                'RandomForestClassifier':RandomForestClassifier(class_weight='balanced',n_jobs=-1),
                 'GradientBoostingClassifier':GradientBoostingClassifier(),
                 'GaussianNB':GaussianNB(),
                 'MultinomialNB':MultinomialNB(),
                 'BernoulliNB':BernoulliNB(),
-                'LinearDiscriminantAnalysis':LinearDiscriminantAnalysis(),
-                'QuadraticDiscriminantAnalysis':QuadraticDiscriminantAnalysis(),
-                'XGBClassifier':xgb.XGBClassifier(),
-                'LGBMClassifier':lgb.LGBMClassifier(),
-                'CatBoostClassifier':CatBoostClassifier()
+              
+                
             }
             model_report=evaluate_models(x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test,models=models)
             print(model_report)
