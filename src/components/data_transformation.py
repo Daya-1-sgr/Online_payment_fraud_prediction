@@ -14,6 +14,7 @@ from src.utils import save_object
 @dataclass
 class DataTransformerConfig:
     preprocessor_obj_file_path=os.path.join('artifacts','preprocessor.pkl')
+    featureprocessor_obj_file_path=os.path.join('artifacts','featureprocessor.pkl')
 
 class Data_Transformation:
     def __init__(self):
@@ -32,6 +33,8 @@ class Data_Transformation:
                 frequency_encoding_dest = X['nameDest'].value_counts().to_dict()
                 X['nameDestFreq'] = X['nameDest'].map(frequency_encoding_dest)
                 return X
+            featurepipeline=Pipeline(steps=[('feature_adder',FunctionTransformer(add_feature_func)),
+                                            ('dropper',FunctionTransformer(drop_columns_func))])
             num_cols=[ 'step','amount','oldbalanceOrg','oldbalanceDest','nameOrigFreq','nameDestFreq']
             cat_cols=['type']
             num_pipeline=Pipeline(steps=[('imputer',SimpleImputer(strategy='mean')),
@@ -40,14 +43,12 @@ class Data_Transformation:
                                          ('onehot',OneHotEncoder(sparse_output=False)),
                                          ('scaler',StandardScaler(with_mean=False))])
             logging.info('Pipelines are complete')
-            preprocessor = ColumnTransformer(transformers=[('add_features', FunctionTransformer(add_feature_func, validate=False),'passthrough'),
-                                                           ('dropper', FunctionTransformer(drop_columns_func, validate=False),'passthrough'),
-                                                           ('num_pipeline', num_pipeline, num_cols),
-                                                           ('cat_pipeline', cat_pipeline, cat_cols)
-            ])
+            preprocessor = ColumnTransformer(transformers=[('num_pipeline', num_pipeline, num_cols),
+                                                           ('cat_pipeline', cat_pipeline, cat_cols)])
+
     
 
-            return preprocessor
+            return (featurepipeline,preprocessor)
         except Exception as e:
             raise CustomException(e,sys)
         
@@ -56,21 +57,28 @@ class Data_Transformation:
             train_df=pd.read_csv(train_path)
             test_df=pd.read_csv(test_path)
             logging.info('Reading test data and train data completed')
-            preprocessor_obj=self.get_data_transformer_object()
+            featurePipeline_obj,preprocessor_obj=self.get_data_transformer_object()
             target_column_name='isFraud'
             input_feature_train_df=train_df.drop(columns=[target_column_name],axis=1)
             target_feature_train_df=train_df[target_column_name]
             input_feature_test_df=test_df.drop(columns=[target_column_name],axis=1)
             target_feature_test_df=test_df[target_column_name]
             print(input_feature_train_df.columns)
-            logging.info('applying preprocessing object on training and testing dfs')
-            input_feature_train_arr=preprocessor_obj.fit_transform(input_feature_train_df)
-            input_feature_test_arr=preprocessor_obj.transform(input_feature_test_df)
+            logging.info('applying  feature pipeline and preprocessing object on training and testing dfs')
+            input_feature_train_df_feature_pipe=featurePipeline_obj.fit_transform(input_feature_train_df)
+            input_feature_test_df_feature_pipe=featurePipeline_obj.transform(input_feature_test_df)
+            logging.info('feature pipeline complete')
+
+
+            input_feature_train_arr=preprocessor_obj.fit_transform(input_feature_train_df_feature_pipe)
+            input_feature_test_arr=preprocessor_obj.transform(input_feature_test_df_feature_pipe)
             train_arr=np.c_[input_feature_train_arr,np.array(target_feature_train_df)]
             test_arr=np.c_[input_feature_test_arr,np.array(target_feature_test_df)]
+            logging.info('columntransformer complete')
 
             logging.info('saving preprocessing object')
             save_object(file_path=self.data_transformation_config.preprocessor_obj_file_path,obj=preprocessor_obj)
+            save_object(file_path=self.data_transformation_config.featureprocessor_obj_file_path,obj=featurePipeline_obj)
 
             return(train_arr,test_arr)
         except Exception as e:
