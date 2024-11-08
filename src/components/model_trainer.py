@@ -49,7 +49,7 @@ class Modeltrainer:
                 'LGBMClassifier':lgb.LGBMClassifier(),
                 'CatBoostClassifier':CatBoostClassifier()
             }
-            model_report=evaluate_models(x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_train,models=models)
+            model_report=evaluate_models(x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test,models=models)
             print(model_report)
         except Exception as e:
             raise CustomException(e,sys)
