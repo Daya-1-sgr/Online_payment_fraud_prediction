@@ -50,6 +50,16 @@ class Modeltrainer:
             model_report=evaluate_models(x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test,models=models)
             print(model_report)
             save_report_to_csv(model_report)
+            model_report_sorted=model_report.sort_values(by='MCC',ascending=False)
+            best_model_score=model_report_sorted['MCC'][0]
+            best_model_name=model_report_sorted['model'][0]
+            best_model=models[best_model_name]
+            if best_model_score< 0.5:
+                raise CustomException("no best model found")
+            logging.info('Best model found is ',best_model_name,' with score',best_model_score)
+            save_object(file_path=self.model_trainer_config.trained_model_file_path,obj=best_model)
+            predicted=best_model.predict(x_test)
+            #######################
         except Exception as e:
             raise CustomException(e,sys)
 
