@@ -17,7 +17,7 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis,QuadraticDi
 import xgboost as xgb
 import lightgbm as lgb
 from catboost import CatBoostClassifier
-
+from sklearn.metrics import matthews_corrcoef
 @dataclass
 class ModelTrainerConfig:
     trained_model_file_path=os.path.join('artifacts','model.pkl')
@@ -59,7 +59,9 @@ class Modeltrainer:
             logging.info('Best model found is ',best_model_name,' with score',best_model_score)
             save_object(file_path=self.model_trainer_config.trained_model_file_path,obj=best_model)
             predicted=best_model.predict(x_test)
-            #######################
+            mcc=matthews_corrcoef(y_test,predicted)
+
+            return mcc
         except Exception as e:
             raise CustomException(e,sys)
 

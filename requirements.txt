@@ -7,4 +7,5 @@ dill
 xgboost
 catboost
 lightgbm
+streamlit
 #-e .
