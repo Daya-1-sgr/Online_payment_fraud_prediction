@@ -5,7 +5,7 @@ import pandas as pd
 from dataclasses import dataclass
 from src.exception import CustomException
 from src.logger import logging
-from src.utils import save_object,evaluate_models
+from src.utils import save_object,evaluate_models,save_report_to_csv
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
@@ -40,18 +40,16 @@ class Modeltrainer:
                 'XGBClassifier':xgb.XGBClassifier(scale_pos_weight=0.001),
                 
                 'CatBoostClassifier':CatBoostClassifier(class_weights=[1854,1774935]),
-                'SVC':SVC(class_weight='balanced'),
-                'DecisionTreeClassifier':DecisionTreeClassifier(),
+
                 'RandomForestClassifier':RandomForestClassifier(class_weight='balanced',n_jobs=-1),
-                'GradientBoostingClassifier':GradientBoostingClassifier(),
-                'GaussianNB':GaussianNB(),
-                'MultinomialNB':MultinomialNB(),
-                'BernoulliNB':BernoulliNB(),
+                
+                
               
                 
             }
             model_report=evaluate_models(x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test,models=models)
             print(model_report)
+            save_report_to_csv(model_report)
         except Exception as e:
             raise CustomException(e,sys)
 
