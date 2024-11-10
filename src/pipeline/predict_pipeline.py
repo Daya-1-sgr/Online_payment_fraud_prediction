@@ -43,7 +43,7 @@ class CustomData:
         try:
             custom_input_data={'step':self.step,'type':self.type,'amount':self.amount,'nameOrigFreq':self.nameOrigFreq,
                                'oldbalanceOrg':self.oldbalanceOrg,'nameDestFreq':self.nameDestFreq,'oldbalanceDest':self.oldbalanceDest}
-            return pd.DataFrame(custom_input_data)
+            return pd.DataFrame(custom_input_data,index=[0])
         except Exception as e:
             raise CustomException(e,sys)
 
