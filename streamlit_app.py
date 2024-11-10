@@ -83,11 +83,11 @@ if st.button('Predict'):
     st.write('The datas you have input are:')
     input_dataframe
 
-prediction=PredictPipeline()
-preds=prediction.predict(input_dataframe)
-if preds ==0:
-    st.success('It is a Non-Fraudulent Transaction')
-else:
-    st.error('It is a Fraudulent Transaction')
+    prediction=PredictPipeline()
+    preds=prediction.predict(input_dataframe)
+    if preds ==0:
+        st.success('It is a Non-Fraudulent Transaction')
+    else:
+        st.error('It is a Fraudulent Transaction')
 
   
