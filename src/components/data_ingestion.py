@@ -48,4 +48,4 @@ if __name__=="__main__":
     data_transformation=Data_Transformation()
     train_arr,test_arr=data_transformation.initiate_data_transformation(train_path=train_path,test_path=test_path)
     model_trainer=Modeltrainer()
-    model_trainer.initiate_model_trainer(train_arr,test_arr)
+    print(model_trainer.initiate_model_trainer(train_arr,test_arr))

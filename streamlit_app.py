@@ -72,12 +72,12 @@ oldbalanceDest = st.number_input(
     help="The account balance of the 'nameDest' account before the transaction. This can help assess if the balance is consistent with the transaction size."
 )
 st.write("The previous balance of the destination account ('nameDest'). Discrepancies between balance and transaction amount may raise red flags.")
-
+data=CustomData(step, type_, amount, nameOrigFreq, oldbalanceOrg, nameDestFreq, oldbalanceDest)
+input_dataframe=data.get_data_as_frame()
 # Predict Button
 if st.button('Predict'):
     # Call the dummy prediction function (Replace with your actual model)
-    data=CustomData(step, type_, amount, nameOrigFreq, oldbalanceOrg, nameDestFreq, oldbalanceDest)
-    input_dataframe=data.get_data_as_frame()
+    
     st.write('The datas you have input are:')
     input_dataframe
 
