@@ -6,7 +6,11 @@ from sklearn.preprocessing import StandardScaler
 
 
 st.title("Fraud Detection Prediction")
+name=st.text_input('Enter your name')
+email=st.text_input('Enter your email address')
 
+if name:
+    st.write(f'hello {name} welcome to the app')
 # Header with an explanation of the app
 st.header("Input Parameters")
 st.write("Please provide the transaction details below. Each field is explained for your convenience.")
@@ -25,10 +29,8 @@ st.write("""
     - **DEBIT**: A direct payment made from the account.
     - **CASH_IN**: A deposit of funds into the account.
 """)
-name=st.text_input('Enter your name')
-email=st.text_input('Enter your email address')
-if name:
-    st.write(f'hello {name} welcome to the app')
+
+
 
 # Integer inputs for other parameters with descriptions
 step = st.number_input(
