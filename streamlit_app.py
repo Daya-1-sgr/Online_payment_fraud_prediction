@@ -5,9 +5,14 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
 
+with st.sidebar:
+    st.link_button('Detailed Explanation in Youtube',"https://youtu.be/Lb0JbeUjyjs")
+    st.link_button('Github Repo Link',"https://github.com/Daya-1-sgr/Online_payment_fraud_prediction")
+    st.link_button('Get in Touch',"www.linkedin.com/in/dayabansgr")
+    
 st.title("Fraud Detection Prediction")
 name=st.text_input('Enter your name')
-email=st.text_input('Enter your email address')
+
 
 if name:
     st.write(f'hello {name} welcome to the app')
